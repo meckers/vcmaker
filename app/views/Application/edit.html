@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title:'Edit comic' /}
+
+<div id="instructions">
+    Please use the cock to select an area as the frame content.
+</div>
+
+#{if comic != null}
+    <input type="text" id="permalink" disabled value="http://localhost:9872/${comic.getId()}" /><br/>
+    <input type="button" value="NEW COMIC" onclick="document.location='/edit/new';"/><br/>
+    <input type="button" value="SAVE & SHARE" onclick="document.location='/edit/finalize/${comic.getId()}';"/>
+
+    #{if comic.getPublished()}
+        <img src="/public/comiccontent/${comic.getId()}/${comic.getId()}.png" />
+    #{/if}
+    #{else}
+        <ul class="frame-list">
+            #{list items:comic.getFrames(), as:'frame'}
+                <li>
+                    <div class="remove-button" onclick="document.location='/edit/remove/${comic.getId()}/${frame}';">X</div>
+                    <img src="/public/comiccontent/${comic.getId()}/${frame}.png"/>
+                </li>
+            #{/list}
+        </ul>
+    #{/else}
+#{/if}
+#{else}
+    No images yet...
+#{/else}
+
+
+

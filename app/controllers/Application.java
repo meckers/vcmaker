@@ -13,4 +13,18 @@ public class Application extends Controller {
         render();
     }
 
+    public static void edit(String id) {
+
+        String comicId = null;
+        Comic comic = null;
+
+        Http.Cookie idCookie = request.cookies.get("comicid");
+        if (idCookie != null) {
+            comicId = idCookie.value;
+            comic = ComicStore.get(comicId);
+        }
+
+        render(comic);
+    }
+
 }

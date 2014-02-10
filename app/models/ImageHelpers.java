@@ -1,28 +1,23 @@
-package controllers;
+package models;
 
-import com.google.gson.JsonObject;
-import org.apache.commons.compress.utils.IOUtils;
-import org.lightcouch.CouchDbClient;
-import play.Logger;
-import play.Play;
-import play.data.FileUpload;
-import play.data.parsing.DataParser;
-import play.mvc.Controller;
 import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.Document;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
+/**
+ * Created with IntelliJ IDEA.
+ * User: magnus
+ * Date: 2014-02-05
+ * Time: 10:19
+ * To change this template use File | Settings | File Templates.
+ */
+public class ImageHelpers {
 
-public class Upload extends Controller{
-
-
-    private static BufferedImage cropImage(BufferedImage src, int top, int left, int width, int height) {
+    public static BufferedImage cropImage(BufferedImage src, int top, int left, int width, int height) {
         BufferedImage dest = src.getSubimage(left, top, width, height);
         return dest;
     }
@@ -54,86 +49,15 @@ public class Upload extends Controller{
         return image;
     }
 
-    public static void upload() {
-        String result = "";
-        try {
-            //Object obj = params.get("img");
-            BufferedImage imageWithCaption = decodeToImage(params.get("imageWithCaption"));
-            BufferedImage image = decodeToImage(params.get("image"));
-            int top = Integer.parseInt(params.get("top"));
-            int left = Integer.parseInt(params.get("left"));
-            int width = Integer.parseInt(params.get("width"));
-            int height = Integer.parseInt(params.get("height"));
-
-            imageWithCaption = cropImage(imageWithCaption, top, left, width, height);
-            image = cropImage(image, top, left, width, height);
-
-            UUID uuid = UUID.randomUUID();
-            String id = uuid.toString().substring(0, 4);
-            String publicPath = File.separator + "public/uploads" + File.separator + id;
-            String path = Play.getFile("").getAbsolutePath() + publicPath;
-            ImageIO.write(imageWithCaption, "png", new File(path + ".png"));
-            ImageIO.write(image, "png", new File(path + "_t.png"));
-            //result = "{url: '" + publicPath + "'}";
-            result = publicPath + ".png";
+    public static BufferedImage stackImages(int width, int height, ArrayList<BufferedImage> images) {
+        BufferedImage stack = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = stack.getGraphics();
+        int topOffset = 0;
+        for(int i=0; i<images.size(); i++) {
+            BufferedImage img = images.get(i);
+            g.drawImage(img, 0, topOffset, null);
+            topOffset += img.getHeight();
         }
-        catch (Exception ex) {
-
-        }
-
-        render("Application/edit.html", result);
-    }
-
-    private static void save(String id, String title, String thebody) {
-        String debugmessage = "nothing happened";
-        String action = "";
-
-        // Save to couchdb
-        try {
-            CouchDbClient dbClient = new CouchDbClient();
-
-            JsonObject json = new JsonObject();
-
-            UUID uuid = UUID.randomUUID();
-
-            if (id == null) {
-                id = uuid.toString().substring(0, 4);
-            }
-
-            //JsonParser parser = new JsonParser();
-            /*
-            JsonElement jsonElement = parser.parse(jsonObject.toString());
-            JsonObject gsonObject = jsonElement.getAsJsonObject();
-            */
-            //JsonArray gsonArray = stepsElement.getAsJsonArray();
-
-            json.addProperty("_id", id);
-            json.addProperty("title", title);
-            json.addProperty("body", thebody);
-
-            if (dbClient.contains(id)) {
-                json = dbClient.find(JsonObject.class, id);
-                if (json != null) {
-                    String rev = json.get("_rev").toString().replaceAll("\"", "");
-                    json.addProperty("_rev", rev);
-                    json.addProperty("title", title);
-                    json.addProperty("body", thebody);
-                    action = "updated!";
-                    dbClient.update(json);
-                }
-            }
-            else {
-                action = "created!";
-                dbClient.save(json);
-            }
-
-            dbClient.shutdown();
-            debugmessage = "it seemed to work, we " + action;
-        }
-        catch (Exception ex) {
-            debugmessage = ex.getMessage();
-        }
-
-        renderJSON("{\"debuginfo\": \"" + debugmessage + "\"," + "\"id\": \"" + id + "\"}");
+        return stack;
     }
 }

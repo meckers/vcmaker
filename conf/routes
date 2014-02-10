@@ -7,7 +7,15 @@ POST	/store/save								Store.save
 POST	/upload									Upload.upload
 #REPLACEDBYVGHOST
 
+POST    /edit/add                               Edit.addFrame
+GET     /edit/new                               Edit.newComic
+GET     /edit/remove/{comicId}/{frameId}        Edit.removeFrame
+GET     /edit/finalize/{comicId}                Edit.finalizeComic
+GET     /edit/{id}                              Application.edit
+GET     /edit                                   Application.edit
+
 # Home page
+GET     /{id}                                   Application.index
 GET     /                                       Application.index
 
 # Ignore favicon requests
