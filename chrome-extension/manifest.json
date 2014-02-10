@@ -1,0 +1,31 @@
+{
+    "manifest_version": 2,
+
+    "name": "ClipNote",
+    "description": "Grab ...",
+    "version": "1.0",
+
+    "permissions": ["tabs", "<all_urls>",  "http://*/*", "https://*/*", "http://localhost/"],
+
+    "background": {
+        "scripts": ["js/jquery-1.10.2.min.js", "js/background.js"]
+    },
+
+    "content_scripts": [
+    {
+      "matches": ["http://www.youtube.com/*"],
+      "js": [
+      "js/jquery-1.10.2.min.js",
+      "js/events.js",
+      "js/app.js",
+      "js/frame.js",
+      "js/texteditor.js",
+      "js/mouseselection.js"
+      ],
+      "css": ["css/clipnote.css"]
+    }],
+
+      "browser_action": {
+        "default_icon": "icon.png"
+    }
+}
