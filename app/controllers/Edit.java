@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.UUID;
 
 public class Edit extends Controller {
@@ -64,6 +65,17 @@ public class Edit extends Controller {
         response.setCookie("comicid", comic.getId(), "1h");
 
 
+        renderTemplate("Application/edit.html", comic);
+    }
+
+    public static void order(String comicId, String frameId, String direction) {
+        Comic comic = ComicStore.get(comicId);
+        int sourceIndex = comic.getFrames().indexOf(frameId);
+        int destinationIndex = (direction.equals("up") ? sourceIndex - 1 : sourceIndex + 1);
+        ArrayList<String> frames = comic.getFrames();
+        Collections.swap(frames, sourceIndex, destinationIndex);
+        comic.setFrames(frames);
+        ComicStore.update(comic);
         renderTemplate("Application/edit.html", comic);
     }
 

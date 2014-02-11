@@ -9,6 +9,7 @@ POST	/upload									Upload.upload
 
 POST    /edit/add                               Edit.addFrame
 GET     /edit/new                               Edit.newComic
+GET     /edit/order/{comicId}/{frameId}/{direction}     Edit.order
 GET     /edit/remove/{comicId}/{frameId}        Edit.removeFrame
 GET     /edit/finalize/{comicId}                Edit.finalizeComic
 GET     /edit/{id}                              Application.edit

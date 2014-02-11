@@ -17,6 +17,10 @@ ul.frame-list {
     padding: 0;
 }
 
+ul.frame-list li {
+    position: relative;
+}
+
 ul.frame-list li img {
     width: 100%;
 }
@@ -27,13 +31,53 @@ ul.frame-list li img {
 
 .remove-button {
     position: absolute;
-    right: 8px;
+    right: 0px;
     width: 25px;
     height: 25px;
     background-color: white;
     border: 0;
     border-bottom-left-radius: 3px;
-    color: red;
-    text-align: center;
     cursor: pointer;
+}
+
+.remove-button i {
+    margin-top: 5px;
+    margin-left: 7px;
+}
+
+.order-buttons {
+    position: absolute;
+    height: 48px;
+    width: 24px;
+    right: 0px;
+    top: 50%;
+    margin-top: -24px;
+}
+
+.order-buttons .order-button {
+    background-color: white;
+    height: 25px;
+    cursor: pointer;
+}
+
+.order-buttons .order-button.up {
+    border-top-left-radius: 3px;
+    border-bottom: 1px solid grey;
+}
+
+.order-buttons .order-button.noclick {
+    opacity:0.5;
+}
+
+.order-buttons .order-button i {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.order-buttons .order-button.noclick i {
+    display: none;
+}
+
+.order-buttons .order-button.down {
+    border-bottom-left-radius: 3px;
 }

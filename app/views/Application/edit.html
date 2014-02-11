@@ -17,11 +17,22 @@
         <ul class="frame-list">
             #{list items:comic.getFrames(), as:'frame'}
                 <li>
-                    <div class="remove-button" onclick="document.location='/edit/remove/${comic.getId()}/${frame}';">X</div>
-                    <!--div class="order-buttons">
-                        <div class="order-button up" onclick="document.location='/edit/order/${comic.getId()}/${frame}/up';"></div>
-                        <div class="order-button down" onclick="document.location='/edit/order/${comic.getId()}/${frame}/down';"></div>
-                    </div-->
+                    <div class="remove-button" onclick="document.location='/edit/remove/${comic.getId()}/${frame}';"><i class="fa fa-trash-o"></i></div>
+                    <div class="order-buttons">
+                        #{if (frame_isFirst)}
+                            <div class="order-button up noclick"></div>
+                        #{/if}
+                        #{else}
+                            <div class="order-button up" onclick="document.location='/edit/order/${comic.getId()}/${frame}/up';"><i class="fa fa-arrow-up"></i></div>
+                        #{/else}
+
+                        #{if (frame_isLast)}
+                            <div class="order-button down noclick"></div>
+                        #{/if}
+                        #{else}
+                            <div class="order-button down" onclick="document.location='/edit/order/${comic.getId()}/${frame}/down';"><i class="fa fa-arrow-down"></i></div>
+                        #{/else}
+                    </div>
                     <img src="/public/comiccontent/${comic.getId()}/${frame}.png"/>
                 </li>
             #{/list}
