@@ -38,6 +38,7 @@ ClipNote.Frame = {
 	},
 
 	onSelectionComplete: function(element) {
+        console.log("onselectioncomplete");
 		this.element = element;
 		this.textEditor.create(element);
 		this.createGrabButton();
@@ -84,6 +85,9 @@ ClipNote.Frame = {
 						me.image = secondResponse.image;
 						document.getElementById('chinti-texteditor').style.display = 'block';
 						me.checkIfReadyToPost();
+                        if (callback) {
+                            callback();
+                        }
 					}			
 				});				
 			}, 500);
@@ -96,6 +100,7 @@ ClipNote.Frame = {
 			var values = this.getValues();
 			console.log(this.imageWithCaption.substr(this.imageWithCaption.length-10), this.image.substr(this.image.length-10));
 			ClipNote.App.postData(this.imageWithCaption, this.image, values.top, values.left, values.width, values.height);
+            return true;
 		}
 	},
 

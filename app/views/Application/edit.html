@@ -18,6 +18,10 @@
             #{list items:comic.getFrames(), as:'frame'}
                 <li>
                     <div class="remove-button" onclick="document.location='/edit/remove/${comic.getId()}/${frame}';">X</div>
+                    <!--div class="order-buttons">
+                        <div class="order-button up" onclick="document.location='/edit/order/${comic.getId()}/${frame}/up';"></div>
+                        <div class="order-button down" onclick="document.location='/edit/order/${comic.getId()}/${frame}/down';"></div>
+                    </div-->
                     <img src="/public/comiccontent/${comic.getId()}/${frame}.png"/>
                 </li>
             #{/list}

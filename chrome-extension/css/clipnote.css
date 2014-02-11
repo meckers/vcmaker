@@ -88,6 +88,38 @@
 	z-index: 200000;
 }
 
+
+body.selecting {
+    cursor: crosshair;
+}
+
+
+.shroud {
+    background-color: black;
+    opacity: 0.2;
+    position:absolute;
+    z-index: 200000;
+}
+
+.shroud.left {
+    left: 0;
+    top: 0;
+    /*height: 100%;*/
+}
+
+.shroud.over {
+    top: 0;
+}
+
+.shroud.under {
+    bottom: 0;
+}
+
+.shroud.right {
+    top: 0;
+    right: 0;
+}
+
 .no-border {
 	border: none;
 }
