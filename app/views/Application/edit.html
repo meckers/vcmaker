@@ -1,17 +1,18 @@
 #{extends 'main.html' /}
 #{set title:'Edit comic' /}
 
-<div id="instructions">
-    Please use the cock to select an area as the frame content.
-</div>
+<div id="instructions"></div>
 
 #{if comic != null}
     <input type="text" id="permalink" disabled value="http://localhost:9872/${comic.getId()}" /><br/>
     <input type="button" value="NEW COMIC" onclick="document.location='/edit/new';"/><br/>
-    <input type="button" value="SAVE & SHARE" onclick="document.location='/edit/finalize/${comic.getId()}';"/>
+
+    #{if !comic.getPublished()}
+        <input type="button" value="SAVE & SHARE" onclick="document.location='/edit/finalize/${comic.getId()}';"/>
+    #{/if}
 
     #{if comic.getPublished()}
-        <img src="/public/comiccontent/${comic.getId()}/${comic.getId()}.png" />
+        This image is now availible at <a href="http://localhost:9873/${comic.id}" target="_blank">www.figurly.com/${comic.id}</a>.
     #{/if}
     #{else}
         <ul class="frame-list">

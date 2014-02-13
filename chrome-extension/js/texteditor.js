@@ -1,10 +1,14 @@
 var ClipNote = ClipNote || {};
 
-ClipNote.TextEditor = {
+ClipNote.TextEditor = Class.extend({
 
 	hidden: false,
 
-	create: function(container) {
+    init: function() {
+
+    },
+
+	create: function(container, dockLocation) {
 		var me = this;
 		this.$container = $(container);
 		this.element = jQuery("<div></div>");
@@ -18,10 +22,10 @@ ClipNote.TextEditor = {
 		this.element.css({
 			'width': this.width + 'px',
 			'height': this.height + 'px',
-			'left': (this.$container.width()/2) - this.width/2 + 'px',
-			'bottom': '0px'
+			'left': (this.$container.width()/2) - this.width/2 + 'px'
 		});
 
+        this.element.css(dockLocation, '0px');
 		this.element.attr('contenteditable', 'true');
 		this.element.attr('spellcheck', 'false');
 		this.element.html('Enter your caption');
@@ -62,4 +66,4 @@ ClipNote.TextEditor = {
 		this.element.removeClass('hidden');
 		//this.hidden = false;
 	}
-};
+});

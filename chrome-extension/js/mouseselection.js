@@ -32,7 +32,6 @@ ClipNote.MouseSelection = {
 		});
 
         $("body").bind('contextmenu', function(e) {
-            console.log("context menu", me.state);
             if (me.state == ClipNote.MouseState.UNSELECTING) {
                 me.setState(ClipNote.MouseState.NO_SELECTION);
                 return false;
@@ -76,12 +75,9 @@ ClipNote.MouseSelection = {
 
     setState: function(state) {
         this.state = state;
-        console.log("Mouse state is now", state);
     },
 
 	handleMouseDown: function(e) {
-        console.log("mouse button", e.which);
-
         if (e.which == 3 && this.state == ClipNote.MouseState.SELECTION_MADE) {
             this.destroyElement();
             //this.setState(ClipNote.MouseState.NO_SELECTION);
@@ -94,10 +90,11 @@ ClipNote.MouseSelection = {
             this.startY = parseInt(e.clientY);
             e.stopPropagation();
         }
+
+        ClipNote.Messages.sendMessage("SELECTING");
 	},
 
     isTooSmall: function() {
-        //console.log("too small?", this.element.width(), this.element.height());
         return this.element === undefined || this.element === null || this.element.width() < 50 || this.element.height() < 50;
     },
 
@@ -117,9 +114,9 @@ ClipNote.MouseSelection = {
                 if (this.callback) {
                     this.callback(this.element);
                 }
+                ClipNote.Messages.sendMessage("POST_SELECTION");
             }
             else {
-                console.log("selection is too small, reverting to no_selection state");
                 this.reset();
             }
             // TOOD: fixa ett smidigt sätt att kunna börja om med sin markering
@@ -219,12 +216,16 @@ ClipNote.MouseSelection = {
 		}
 	},
 
+    borderWidth: function() {
+        return this.element.css('border-width').replace('px', '');
+    },
+
 	hideBorder: function() {
-		this.element.addClass('no-border');
+		//this.element.addClass('no-border');
 	},
 
 	showBorder: function() {
-		this.element.removeClass('no-border');
+		//this.element.removeClass('no-border');
 	}
 
 

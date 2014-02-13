@@ -7,11 +7,13 @@ ClipNote.Frame = {
 	imageWithCaption: null,
 	text: null,
 	textEditor: null,
+    textEditorTop: null,
 	mouseSelection: null,
 
 	init: function() {
 		//this.element = element;
-		this.textEditor = ClipNote.TextEditor;
+		this.textEditor = new ClipNote.TextEditor();
+        this.textEditorTop = new ClipNote.TextEditor();
 		this.mouseSelection = ClipNote.MouseSelection;
 		this.enableSelection();
 		this.registerListeners();
@@ -40,7 +42,8 @@ ClipNote.Frame = {
 	onSelectionComplete: function(element) {
         console.log("onselectioncomplete");
 		this.element = element;
-		this.textEditor.create(element);
+		this.textEditor.create(element, "bottom");
+        this.textEditorTop.create(element, "top");
 		this.createGrabButton();
 	},
 
@@ -60,6 +63,7 @@ ClipNote.Frame = {
 		this.mouseSelection.hideBorder();
 		this.captureImages(function() {
 			me.mouseSelection.showBorder();
+            ClipNote.Messages.sendMessage("POST_GRAB");
 		});
 	},
 
@@ -69,7 +73,8 @@ ClipNote.Frame = {
 			command: "capture-tab",
 			test: '1'
 		}, function(response) {
-			document.getElementById('chinti-texteditor').style.display = 'none';
+			//document.getElementById('chinti-texteditor').style.display = 'none';
+            $(".caption").css('display', 'none');
 			if (response.image) {
 				me.imageWithCaption = response.image;
 			}
@@ -83,7 +88,8 @@ ClipNote.Frame = {
 				}, function(secondResponse) {
 					if (secondResponse.image) {					
 						me.image = secondResponse.image;
-						document.getElementById('chinti-texteditor').style.display = 'block';
+						//document.getElementById('chinti-texteditor').style.display = 'block';
+                        $(".caption").css('display', 'block');
 						me.checkIfReadyToPost();
                         if (callback) {
                             callback();
@@ -105,7 +111,15 @@ ClipNote.Frame = {
 	},
 
 	getValues: function() {
-		return this.mouseSelection.getValues();
+        var values = this.mouseSelection.getValues();
+        var borderWidth = parseInt(this.mouseSelection.borderWidth());
+        console.log("border width", borderWidth);
+        values.top += borderWidth;
+        values.left += borderWidth;
+        values.width -= borderWidth;
+        values.height -= borderWidth;
+        console.log(values);
+		return values;
 	}
 
 };

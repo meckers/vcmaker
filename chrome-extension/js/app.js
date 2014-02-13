@@ -35,11 +35,13 @@ ClipNote.App = {
 	},*/
 
 	openSidebar: function() {
-		this.sidebar = $('<iframe></iframe>');
-		this.sidebar.attr('id', 'chinti_edit');
-		this.sidebar.addClass('sidebar');
-		$('body').append(this.sidebar);
-		this.sidebar.attr('src', this.baseUrl + '/edit');
+        ClipNote.SideBar.init('body', this.baseUrl + '/edit');
+        /*
+        this.sidebar = $('<iframe></iframe>');
+        this.sidebar.attr('id', 'chinti_edit');
+        this.sidebar.addClass('sidebar');
+        $('body').append(this.sidebar);
+        this.sidebar.attr('src', this.baseUrl + '/edit'); */
 	},
 
 	// Since I want to specify target, It seems I need to do this via an injected form:

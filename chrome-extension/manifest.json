@@ -16,8 +16,11 @@
       "matches": ["http://www.youtube.com/*"],
       "js": [
       "js/jquery-1.10.2.min.js",
+      "js/simple-javascript-inheritance.js",
       "js/events.js",
       "js/app.js",
+      "js/messages.js",
+      "js/sidebar.js",
       "js/frame.js",
       "js/texteditor.js",
       "js/mouseselection.js"

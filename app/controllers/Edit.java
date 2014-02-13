@@ -94,7 +94,7 @@ public class Edit extends Controller {
         stackFrames(comic, false);
         stackFrames(comic, true);
         comic.setPublished(true);
-        ComicStore.save(comic);
+        ComicStore.update(comic);
         renderTemplate("Application/edit.html", comic);
     }
 

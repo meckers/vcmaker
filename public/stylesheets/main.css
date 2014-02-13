@@ -4,6 +4,41 @@ body {
 }
 
 
+/* SITE */
+
+.button {
+    border: 1px solid #a0a0a0;
+    border-radius: 2px;
+    padding: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #efefef;
+    margin: 5px;
+    width: 200px;
+    display: inline-block;
+}
+
+#header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 5px;
+    background-color: black;
+}
+
+#content {
+    text-align: center;
+    margin-top: 100px;
+}
+
+img.image.hidden {
+    display: none;
+}
+
+
+/* SIDEBAR */
+
 #instructions {
     border: 1px solid #add8e6;
     padding: 5px;
