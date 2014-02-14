@@ -1,10 +1,10 @@
 var ClipNote = ClipNote || {};
 
 ClipNote.MouseState = {
-    NO_SELECTION: 0,
-    SELECTING: 1,
-    SELECTION_MADE: 2,
-    UNSELECTING: 3
+    NO_SELECTION: 'no selection',
+    SELECTING: 'selecting',
+    SELECTION_MADE: 'selection made',
+    UNSELECTING: 'unselecting'
 };
 
 ClipNote.MouseSelection = {
@@ -124,8 +124,10 @@ ClipNote.MouseSelection = {
             $("body").off('mousemove');
             $("body").off('mouseup');*/
 
-            //e.stopPropagation();
         }
+
+        e.stopPropagation();
+        //e.preventDefault();
 	},
 
     handleMouseMove: function(e) {

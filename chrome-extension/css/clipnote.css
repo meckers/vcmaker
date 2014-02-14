@@ -35,12 +35,22 @@
 .caption {
 	padding: 3px;
     font-family: "Impact", arial, tahoma;
-	font-size: 35px;
-	/*font-style: italic;*/
+    text-align: center;
 	font-weight: bold;
 	color: white;
 	position: absolute;
 	z-index: 100;
+}
+
+.caption.initial-mode {
+    border: 1px dashed purple;
+    background-color: black;
+    opacity: 0.3;
+}
+
+.caption.initial-mode .text {
+    font-family: Verdana, Arial;
+    font-size: 20px;
 }
 
 .caption.outlined
