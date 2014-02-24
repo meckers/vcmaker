@@ -1,7 +1,20 @@
+var active = false;
+
 chrome.browserAction.onClicked.addListener(function(tab) {
-  chrome.tabs.executeScript(null, {
-    file: 'js/start.js'
-  }); 
+    console.log("click browser action", active);
+    if (!active) {
+        chrome.tabs.executeScript(null, {
+            file: 'js/start.js'
+        });
+        active = true;
+    }
+    else {
+        chrome.tabs.executeScript(null, {
+            code: 'if (ClipNote) { ClipNote.App.quit(); }'
+        })
+        active = false;
+    }
+
 });
 
 /*
@@ -45,6 +58,10 @@ chrome.runtime.onMessage.addListener(
         });
 
     }
+    else if (request.command == 'quit') {
+        active = false;
+    }
+
     return true;
 });
 

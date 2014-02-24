@@ -18,33 +18,27 @@ ClipNote.App = {
 		this.frame.init();
 	},
 
-	registerListeners: function() {
-		//chrome.runtime.onMessage.addListener(this.onMessage);
-		var me = this;
-		/*
-		chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-			me.onMessage(request, sender, sendResponse);
-		});*/
-	},
+    quit: function() {
+        this.removeSidebar();
+        chrome.runtime.sendMessage({
+            command: "quit"
+        });
+    },
 
-	// Called whenever the extension script sends a message to (this) content script.
-	/*
-	onMessage: function(request, sender, sendResponse) {
-		if (request.image) {
-			var values = this.frame.getValues();
-			this.postData(request.image, request.imageNaked, values.top, values.left, values.width, values.height);
-		}
-	},*/
+	registerListeners: function() {
+		var me = this;
+        Events.register("QUIT", this, function() {
+            me.quit();
+        })
+	},
 
 	openSidebar: function() {
         ClipNote.SideBar.init('body', this.baseUrl + '/edit');
-        /*
-        this.sidebar = $('<iframe></iframe>');
-        this.sidebar.attr('id', 'chinti_edit');
-        this.sidebar.addClass('sidebar');
-        $('body').append(this.sidebar);
-        this.sidebar.attr('src', this.baseUrl + '/edit'); */
 	},
+
+    removeSidebar: function() {
+        ClipNote.SideBar.remove();
+    },
 
 	// Since I want to specify target, It seems I need to do this via an injected form:
 	postData: function(imageWithCaption, image, top, left, width, height) {

@@ -71,7 +71,9 @@ ClipNote.Frame = {
         cancelButton.html("CANCEL SELECTION");
         cancelButton.addClass("hanging-button cancel");
         cancelButton.click(function() {
-            me.cancelSelection();
+            //me.cancelSelection();
+            Events.trigger("CANCEL_SELECTION_CLICK");
+
         });
         this.element.append(cancelButton);
     },

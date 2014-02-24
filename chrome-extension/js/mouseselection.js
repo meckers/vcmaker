@@ -29,9 +29,8 @@ ClipNote.MouseSelection = {
             me.activate();
             ClipNote.Messages.sendEvent("SELECTION_ACTIVATED");
         });
-        Events.register("SELECTION_CANCELLED", this, function() {
-            me.dismantle();
-            ClipNote.Messages.sendEvent("SELECTION_CANCELLED");
+        Events.register("CANCEL_SELECTION_CLICK", this, function() {
+            me.onCancelSelection();
         });
 
         $('body').bind('mousedown', function(e) {
@@ -44,6 +43,11 @@ ClipNote.MouseSelection = {
         $('body').bind('mousemove', function(e) {
             me.handleMouseMove(e);
         });
+    },
+
+    onCancelSelection: function() {
+        this.dismantle();
+        ClipNote.Messages.sendEvent("SELECTION_CANCELLED");
     },
 
     handleMouseDown: function(e) {
@@ -102,8 +106,10 @@ ClipNote.MouseSelection = {
     },
 
     destroyBox: function() {
-        this.box.remove();
-        this.box = null;
+        if (this.box) {
+            this.box.remove();
+            this.box = null;
+        }
     },
 
     startBoxDraw: function(x, y) {

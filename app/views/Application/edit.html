@@ -1,9 +1,11 @@
 #{extends 'main.html' /}
 #{set title:'Edit comic' /}
 
+<input type="button" id="vcmaker-quit-button" value="X" onclick="Figurly.SideBar.quit();"/>
+
 <div id="instructions"></div>
 
-<input type="button" id="start-selection-button" value="select area" onclick="Figurly.SideBar.startSelection();"/>
+<input type="button" id="start-selection-button" value="ENTER SELECT MODE" onclick="Figurly.SideBar.toggleSelectionMode();"/>
 
 #{if comic != null}
     <input type="text" id="permalink" disabled value="http://localhost:9872/${comic.getId()}" /><br/>

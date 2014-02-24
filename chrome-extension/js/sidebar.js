@@ -96,6 +96,14 @@ ClipNote.SideBar = {
         $handle.css('right', '290px');
         $handle.css('height', $(document).height() + 'px');
         return $handle;
+    },
+
+
+
+    remove: function() {
+        this.$element.remove();
+        this.$delimiter.remove();
+        this.$handle.remove();
     }
 
 }

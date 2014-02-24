@@ -13,6 +13,12 @@ ClipNote.Messages = {
                 //alert(e.data.message);
                 Events.trigger("START_SELECTION_BUTTON_CLICK");
             }
+            else if (e.data.command == 'disableSelection') {
+                Events.trigger("CANCEL_SELECTION_CLICK");
+            }
+            else if (e.data.command == 'quit') {
+                Events.trigger("QUIT");
+            }
         });
     },
 

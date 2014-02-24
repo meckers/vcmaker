@@ -18,6 +18,12 @@ body {
     display: inline-block;
 }
 
+.vcmaker-quit-button {
+    position: absolute;
+    right: 0px;
+    top: 0;
+}
+
 #header {
     width: 100%;
     position: absolute;
