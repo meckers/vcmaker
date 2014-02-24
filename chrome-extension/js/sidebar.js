@@ -86,6 +86,7 @@ ClipNote.SideBar = {
     createDelimiter: function() {
         var $delimiter = $("<div></div>");
         $delimiter.addClass('delimiter');
+        $delimiter.css('height', $(document).height() + 'px');
         return $delimiter;
     },
 
@@ -93,6 +94,7 @@ ClipNote.SideBar = {
         var $handle = $("<div></div>");
         $handle.addClass('handle');
         $handle.css('right', '290px');
+        $handle.css('height', $(document).height() + 'px');
         return $handle;
     }
 
