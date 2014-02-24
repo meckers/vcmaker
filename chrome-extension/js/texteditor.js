@@ -23,7 +23,7 @@ ClipNote.TextEditor = Class.extend({
 
 		this.element.css({
 			'width': this.width + 'px',
-			'height': this.height + 'px',
+			//'height': this.height + 'px',
 			'left': (this.$container.width()/2) - this.width/2 + 'px',
             'font-size': this.fontSize + 'px'
 		});
