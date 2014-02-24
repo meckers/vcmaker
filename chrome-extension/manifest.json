@@ -5,7 +5,7 @@
     "description": "Grab ...",
     "version": "1.0",
 
-    "permissions": ["tabs", "<all_urls>",  "http://*/*", "https://*/*", "http://localhost/"],
+    "permissions": ["tabs", "<all_urls>",  "http://*/*", "https://*/*"],
 
     "background": {
         "scripts": ["js/jquery-1.10.2.min.js", "js/background.js"]
@@ -13,7 +13,7 @@
 
     "content_scripts": [
     {
-      "matches": ["http://www.youtube.com/*"],
+      "matches": ["http://*/*", "https://*/*"],
       "js": [
       "js/jquery-1.10.2.min.js",
       "js/simple-javascript-inheritance.js",
@@ -23,7 +23,9 @@
       "js/sidebar.js",
       "js/frame.js",
       "js/texteditor.js",
-      "js/mouseselection.js"
+      "js/mouseselection.js",
+      "js/shroud.js"
+
       ],
       "css": ["css/clipnote.css"]
     }],

@@ -3,6 +3,8 @@
 
 <div id="instructions"></div>
 
+<input type="button" id="start-selection-button" value="select area" onclick="Figurly.SideBar.startSelection();"/>
+
 #{if comic != null}
     <input type="text" id="permalink" disabled value="http://localhost:9872/${comic.getId()}" /><br/>
     <input type="button" value="NEW COMIC" onclick="document.location='/edit/new';"/><br/>

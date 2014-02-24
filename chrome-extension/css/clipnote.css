@@ -1,5 +1,5 @@
 
-.textedit-button {
+.eckersvcmaker .textedit-button {
 	padding: 3px;
 	border: 1px solid black;
 	background-color: wheat;
@@ -13,26 +13,33 @@
 	cursor: pointer;
 }
 
-.snapshot-button {
-	padding: 10px;
-	border: 1px solid black;
-	border-top: none;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	background-color: white;
-	right: 0px;
-	bottom: -35px;
-	position: absolute;
-	z-index: 100;
-	color: black;
-	cursor: pointer;
+.eckersvcmaker .hanging-button {
+    padding: 10px;
+    border: 1px solid black;
+    border-top: none;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: white;
+    bottom: -35px;
+    position: absolute;
+    z-index: 100;
+    color: black;
+    cursor: pointer;
 }
 
-.snapshot-button:hover {
+.eckersvcmaker .hanging-button.grab {
+	right: 0px;
+}
+
+.eckersvcmaker .hanging-button.cancel {
+    left: 0px;
+}
+
+.eckersvcmaker .snapshot-button:hover {
 	background-color: #efefef;
 }
 
-.caption {
+.eckersvcmaker .caption {
 	padding: 3px;
     font-family: "Impact", arial, tahoma;
     text-align: center;
@@ -42,18 +49,18 @@
 	z-index: 100;
 }
 
-.caption.initial-mode {
+.eckersvcmaker .caption.initial-mode {
     border: 1px dashed purple;
     background-color: black;
     opacity: 0.3;
 }
 
-.caption.initial-mode .text {
+.eckersvcmaker .caption.initial-mode .text {
     font-family: Verdana, Arial;
     font-size: 20px;
 }
 
-.caption.outlined
+.eckersvcmaker .caption.outlined
 {
     text-shadow:
     -2px -2px 0 #000,
@@ -63,11 +70,11 @@
     
 }
 
-.caption.hidden {
+.eckersvcmaker .caption.hidden {
 	display: none;
 }
 
-.sidebar {
+.eckersvcmaker .sidebar {
 	z-index: 2000000000;
 	width: 300px;
 	position: absolute;
@@ -79,7 +86,7 @@
 	/*border-left: 2px solid black; */
 }
 
-.delimiter {
+.eckersvcmaker .delimiter {
      z-index: 2000000000;
      width: 5px;
      height: 100%;
@@ -91,7 +98,7 @@
      padding: 0;
 }
 
-.handle {
+.eckersvcmaker .handle {
     z-index: 2000000000;
     width: 20px;
     height: 100%;
@@ -103,51 +110,59 @@
     cursor: ew-resize;
 }
 
-.caption:hover, .caption:active {
+.eckersvcmaker .caption:hover, .caption:active {
 	border: 1px dotted white;
 }
 
-.mouse-selection {
-	border: 3px dotted yellow;
+.eckersvcmaker .mouse-selection {
+	/*border: 3px dotted yellow;*/
 	position: absolute;
 	z-index: 200000;
 }
 
 
-body.selecting {
+body.eckersvcmaker.selecting {
     cursor: crosshair;
 }
 
 
-.shroud {
+.eckersvcmaker .shroud {
     background-color: black;
-    opacity: 0.2;
+    opacity: 0.3;
     position:absolute;
     z-index: 200000;
 }
 
-.shroud.left {
+.eckersvcmaker .shroud.start {
+    top: 0;
+    left: 0;
+    /*
+    width: 100%;
+    height: 100%;*/
+}
+
+.eckersvcmaker .shroud.left {
     left: 0;
     top: 0;
 }
 
-.shroud.over {
+.eckersvcmaker .shroud.over {
     top: 0;
 }
 
-.shroud.under {
-    bottom: 0;
+.eckersvcmaker .shroud.under {
+    /*bottom: 0;*/
 }
 
-.shroud.right {
+.eckersvcmaker .shroud.right {
     top: 0;
     right: 0;
 }
 
-.no-border {
+.eckersvcmaker .no-border {
 	border: none;
 }
 
-.hidden {
+.eckersvcmaker .hidden {
 	display: none;
 }

@@ -15,7 +15,8 @@ ClipNote.Frame = {
 		this.textEditor = new ClipNote.TextEditor();
         this.textEditorTop = new ClipNote.TextEditor();
 		this.mouseSelection = ClipNote.MouseSelection;
-		this.enableSelection();
+        this.mouseSelection.init('body');
+		//this.enableSelection();
 		this.registerListeners();
 	},
 
@@ -24,6 +25,10 @@ ClipNote.Frame = {
 		chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 			me.onMessage(request, sender, sendResponse);
 		});
+
+        Events.register("BOX_SELECTION_COMPLETE", this, function(box) {
+            me.onSelectionComplete(box);
+        });
 	},
 
 	onMessage: function(request, sender, sendResponse) {
@@ -32,38 +37,57 @@ ClipNote.Frame = {
 		}
 	},
 
+    /*
 	enableSelection: function() {
 		var me = this;
 		this.mouseSelection.init(function(element) {
 			me.onSelectionComplete(element);
 		});	
-	},
+	},*/
 
-	onSelectionComplete: function(element) {
+	onSelectionComplete: function(box) {
         console.log("onselectioncomplete");
-		this.element = element;
-		this.textEditor.create(element, "bottom");
-        this.textEditorTop.create(element, "top");
+		this.element = box;
+		this.textEditor.create(box, "bottom");
+        this.textEditorTop.create(box, "top");
 		this.createGrabButton();
+        this.createCancelButton();
 	},
 
 	createGrabButton: function() {
 		var me = this;
 		var ClipNote_snapshotButton = jQuery("<div></div>");
 		ClipNote_snapshotButton.html("GRAB ->");
-		ClipNote_snapshotButton.addClass("snapshot-button");
+		ClipNote_snapshotButton.addClass("hanging-button grab");
 		ClipNote_snapshotButton.click(function() {
 			me.grabFrame();
 		});
 		this.element.append(ClipNote_snapshotButton);
 	},
 
+    createCancelButton: function() {
+        var me = this;
+        var cancelButton = jQuery("<div></div>");
+        cancelButton.html("CANCEL SELECTION");
+        cancelButton.addClass("hanging-button cancel");
+        cancelButton.click(function() {
+            me.cancelSelection();
+        });
+        this.element.append(cancelButton);
+    },
+
+    cancelSelection: function() {
+        //this.mouseSelection.cancel();
+        //this.mouseSelection.reset();
+        Events.trigger("SELECTION_CANCELLED");
+    },
+
 	grabFrame: function() {
 		var me = this;
-		this.mouseSelection.hideBorder();
+		//this.mouseSelection.hideBorder();
 		this.captureImages(function() {
-			me.mouseSelection.showBorder();
-            ClipNote.Messages.sendMessage("POST_GRAB");
+			//me.mouseSelection.showBorder();
+            //ClipNote.Messages.sendMessage("POST_GRAB");
 		});
 	},
 

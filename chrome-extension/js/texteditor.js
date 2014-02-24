@@ -42,7 +42,7 @@ ClipNote.TextEditor = Class.extend({
 
 		jQuery(container).append(this.element);
 
-		this.focus();
+		//this.focus();
 	},
 
     enterInitialMode: function() {

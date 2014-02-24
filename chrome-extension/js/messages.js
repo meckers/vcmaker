@@ -2,6 +2,20 @@ var ClipNote = ClipNote || {};
 
 ClipNote.Messages = {
 
+    init: function() {
+        this.listen();
+    },
+
+    listen: function() {
+        console.log(window);
+        window.addEventListener('message', function(e) {
+            if (e.data.command == 'startSelection') {
+                //alert(e.data.message);
+                Events.trigger("START_SELECTION_BUTTON_CLICK");
+            }
+        });
+    },
+
     PRE_SELECTION : 'Select an area on the page by clicking and dragging the mouse. Start with the top left corner.',
     SELECTING: 'Keep the mouse button pressed and drag until you have marked the desired area.',
     POST_SELECTION: 'Now enter a caption or delete it. When done, click "grab" to capture the area. Right click anywhere to clear the selection.',
@@ -9,5 +23,13 @@ ClipNote.Messages = {
 
     sendMessage: function(messageName) {
         document.getElementById('chinti_edit').contentWindow.postMessage({command: 'showMessage', message: ClipNote.Messages[messageName]}, "http://localhost:9873");
+    },
+
+    sendEvent: function(name, data) {
+        document.getElementById('chinti_edit').contentWindow.postMessage({command: 'event', message: { name: name, data: data}}, "http://localhost:9873");
     }
+
+
+
+
 }

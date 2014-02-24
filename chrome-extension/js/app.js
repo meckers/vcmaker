@@ -7,8 +7,10 @@ ClipNote.App = {
 	baseUrl: 'http://localhost:9873',
 
 	init: function() {
+        $('body').addClass('eckersvcmaker');
 		this.frame = ClipNote.Frame;
-		this.registerListeners();			
+		this.registerListeners();
+        ClipNote.Messages.init();
 	},
 
 	activate: function() {

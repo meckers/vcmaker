@@ -1,234 +1,159 @@
 var ClipNote = ClipNote || {};
 
-ClipNote.MouseState = {
-    NO_SELECTION: 'no selection',
-    SELECTING: 'selecting',
-    SELECTION_MADE: 'selection made',
-    UNSELECTING: 'unselecting'
-};
-
 ClipNote.MouseSelection = {
 
-    state: ClipNote.MouseState.NO_SELECTION,
+    mouseDownHandler: null,
+    mouseUpHandler: null,
+    mouseMoveHandler: null,
+    shroud: null,
+    border: '3px dashed yellow',
 
-    shroudi: null,
-    shroudl: null,
-    shroudo: null,
-    shroudu: null,
-    shroudr: null,
-
-
-	init: function(callback) {
-
-		this.callback = callback;
-		var me = this;
-
-		$("body").on('mousedown', function (e) {
-			me.handleMouseDown(e);
-		}).on('mouseup', function(e) {
-			me.handleMouseUp(e);
-		}).on('mousemove', function(e) {
-			me.handleMouseMove(e);
-		});
-
-        $("body").bind('contextmenu', function(e) {
-            if (me.state == ClipNote.MouseState.UNSELECTING) {
-                me.setState(ClipNote.MouseState.NO_SELECTION);
-                return false;
-            }
-        });
-
-        $('body').addClass('selecting');
-
-        this.createShroud();
-
-        /*
-        $("body")[0].oncontextmenu = function() {
-            if (this.state == ClipNote.MouseState.SELECTION_MADE) {
-                return false;
-            }
-        };*/
-	},
-
-    /*
-    createShroud: function() {
-        if(this.shroudi) {
-            this.shroudi.remove();
-        }
-        this.shroudi = $("<div></div>");
-        this.shroudi.addClass('shroud');
-        this.shroudi.css({
-            'width': $('body').width(),
-            'height': $('body').height(),
-            'top': '0',
-            'left': '0'
-        });
-        $('body').append(this.shroudi);
-    },*/
-
-	destroyElement: function() {
-        if (this.element !== undefined) {
-            this.element.remove();
-            this.element = undefined;
-        }
-	},
-
-    setState: function(state) {
-        this.state = state;
+    init: function(container) {
+        this.$container = $(container) || $('body');
+        this.shroud = ClipNote.Shroud;
+        this.shroud.init("body", 3);
+        this.listen();
     },
 
-	handleMouseDown: function(e) {
-        if (e.which == 3 && this.state == ClipNote.MouseState.SELECTION_MADE) {
-            this.destroyElement();
-            //this.setState(ClipNote.MouseState.NO_SELECTION);
-            this.setState(ClipNote.MouseState.UNSELECTING);
-        }
-        else if (e.which == 1 && this.state == ClipNote.MouseState.NO_SELECTION) {
-            //this.isDrawing = true
-            this.setState(ClipNote.MouseState.SELECTING);
-            this.startX = parseInt(e.clientX);
-            this.startY = parseInt(e.clientY);
+    activate: function() {
+        // this create (but hidden)
+        this.createBox({hidden: true});
+        this.shroud.activate();
+        // shroud activate & create (all shrouded)
+        this.active = true;
+    },
+
+    listen: function() {
+        var me = this;
+        Events.register("START_SELECTION_BUTTON_CLICK", this, function() {
+            me.activate();
+            ClipNote.Messages.sendEvent("SELECTION_ACTIVATED");
+        });
+        Events.register("SELECTION_CANCELLED", this, function() {
+            me.dismantle();
+            ClipNote.Messages.sendEvent("SELECTION_CANCELLED");
+        });
+
+        $('body').bind('mousedown', function(e) {
+            console.log("mouse down");
+            me.handleMouseDown(e);
+        });
+        $('body').bind('mouseup', function(e) {
+            me.handleMouseUp(e);
+        });
+        $('body').bind('mousemove', function(e) {
+            me.handleMouseMove(e);
+        });
+    },
+
+    handleMouseDown: function(e) {
+        if (this.active && !this.done && e.which == 1) {
+            console.log("left mouse button down");
+            this.startBoxDraw(e.pageX, e.pageY);
             e.stopPropagation();
         }
+    },
 
-        ClipNote.Messages.sendMessage("SELECTING");
-	},
+    handleMouseUp: function(e) {
+        if (this.active) {
+            // if selecting:
+            if (this.drawing) {
+                this.endBoxDraw();
+                e.stopPropagation();
+                this.done = true;
+                //this.shroud.remove();
+            }
+        }
+    },
+
+    handleMouseMove: function(e) {
+        //console.log("M.M. pageXY=", e.pageX, e.pageY, "clientXY=", e.clientX, e.clientY);
+        if (this.active) {
+            console.log("mouse move", this.drawing);
+            if (this.drawing) {
+                var mouseX = parseInt(e.pageX);
+                var mouseY = parseInt(e.pageY);
+                var boxWidth = mouseX - this.startX;
+                var boxHeight = mouseY - this.startY;
+
+                if (!this.box) {
+                    this.box = this.createBox();
+                    this.$container.append(this.box);
+                }
+
+                this.box.css('width', boxWidth);
+                this.box.css('height', boxHeight);
+
+                this.shroud.onBoxDraw(mouseX, mouseY);
+
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        }
+    },
+
+    createBox: function() {
+        var el = jQuery('<div></div>');
+        el.addClass('mouse-selection');
+        el.css('top', this.startY);
+        el.css('left', this.startX);
+        el.css('border', this.border);
+        return el;
+    },
+
+    destroyBox: function() {
+        this.box.remove();
+        this.box = null;
+    },
+
+    startBoxDraw: function(x, y) {
+        console.log("start box draw", this);
+        this.drawing = true;
+        this.startX = x;
+        this.startY = y;
+        Events.trigger("BOX_DRAW_START", { x: x, y: y });
+    },
+
+    endBoxDraw: function() {
+        this.drawing = false;
+        if (!this.isTooSmall()) {
+            if (this.callback) {
+                this.callback(this.element);
+            }
+            Events.trigger("BOX_SELECTION_COMPLETE", this.box);
+        }
+        else {
+            this.reset();
+        }
+    },
 
     isTooSmall: function() {
-        return this.element === undefined || this.element === null || this.element.width() < 50 || this.element.height() < 50;
+        return this.box === undefined || this.box === null || this.box.width() < 50 || this.box.height() < 50;
+    },
+
+    getValues: function() {
+        return {
+            top: this.box.offset().top,
+            left: this.box.offset().left,
+            width: this.box.width(),
+            height: this.box.height()
+        }
+    },
+
+    borderWidth: function() {
+        return this.box.css('border-width').replace('px', '');
+    },
+
+    dismantle: function() {
+        this.destroyBox();
+        this.shroud.remove();
+        this.active = false;
+        this.done = false;
     },
 
     reset: function() {
-        this.destroyElement();
-        this.removeShroud();
-        this.setState(ClipNote.MouseState.NO_SELECTION);
-        $('body').addClass('selecting');
-    },
-
-	handleMouseUp: function(e) {
-		//this.isDrawing = false;
-        if (e.which == 1 && this.state == ClipNote.MouseState.SELECTING) {
-            if (!this.isTooSmall()) {
-                this.setState(ClipNote.MouseState.SELECTION_MADE);
-                this.removeShroud();
-                if (this.callback) {
-                    this.callback(this.element);
-                }
-                ClipNote.Messages.sendMessage("POST_SELECTION");
-            }
-            else {
-                this.reset();
-            }
-            // TOOD: fixa ett smidigt sätt att kunna börja om med sin markering
-            /*$("body").off('mousedown');
-            $("body").off('mousemove');
-            $("body").off('mouseup');*/
-
-        }
-
-        e.stopPropagation();
-        //e.preventDefault();
-	},
-
-    handleMouseMove: function(e) {
-
-        //if (this.isDrawing) {
-        if (this.state == ClipNote.MouseState.SELECTING) {
-
-            var mouseX = parseInt(e.clientX);
-            var mouseY = parseInt(e.clientY);
-            var elementWidth = mouseX - this.startX;
-            var elementHeight = mouseY - this.startY;
-
-            if (elementHeight > 5) {
-
-                if (!this.element) {
-                    this.element = this.createElement();
-                    $("body").append(this.element);
-                    this.createShroud();
-                }
-
-                this.element.css('width', mouseX - this.startX);
-                this.element.css('height', mouseY - this.startY);
-                this.transformShroud(mouseX, mouseY);
-            }
-            else if (this.element) {
-                this.element.remove();
-                this.removeShroud();
-            }
-
-            e.stopPropagation();
-        }
-    },
-
-    createShroud: function() {
-        if(this.shroudi) {
-            this.shroudi.remove();
-        }
-
-        this.shroudl = $("<div></div>").addClass('shroud left');
-        this.shroudo = $("<div></div>").addClass('shroud over');
-        this.shroudu = $("<div></div>").addClass('shroud under');
-        this.shroudr = $("<div></div>").addClass('shroud right');
-
-        $("body").append(this.element);
-        $("body").append(this.shroudl);
-        $("body").append(this.shroudo);
-        $("body").append(this.shroudu);
-        $("body").append(this.shroudr);
-
-        this.shroudo.css('left', this.startX);
-        this.shroudl.css('height', $("body").height());
-        this.shroudu.css('left', this.startX);
-        this.shroudr.css('height', $("body").height());
-    },
-
-    removeShroud: function() {
-        this.shroudl.remove();
-        this.shroudo.remove();
-        this.shroudu.remove();
-        this.shroudr.remove();
-    },
-
-    transformShroud: function(mouseX, mouseY) {
-        this.shroudl.css('width', this.startX);
-        this.shroudo.css('height', this.startY);
-        this.shroudo.css('width', mouseX - this.startX);
-        this.shroudu.css('height', $("body").height() - mouseY);
-        this.shroudu.css('width', mouseX - this.startX);
-        this.shroudr.css('width', $("body").width() - mouseX);
-    },
-
-
-
-	createElement: function() {
-		var el = jQuery('<div></div>');
-		el.addClass('mouse-selection');
-		el.css('top', this.startY);
-		el.css('left', this.startX);
-		return el;
-	},
-
-	getValues: function() {
-		return {
-			top: this.element.offset().top,
-			left: this.element.offset().left,
-			width: this.element.width(),
-			height: this.element.height()
-		}
-	},
-
-    borderWidth: function() {
-        return this.element.css('border-width').replace('px', '');
-    },
-
-	hideBorder: function() {
-		//this.element.addClass('no-border');
-	},
-
-	showBorder: function() {
-		//this.element.removeClass('no-border');
-	}
-
+        this.dismantle();
+        this.activate();
+    }
 
 }

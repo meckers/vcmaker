@@ -13,7 +13,7 @@ ClipNote.SideBar = {
         var me = this;
 
         this.$element.on('load', function() {
-            ClipNote.Messages.sendMessage("PRE_SELECTION");
+            //ClipNote.Messages.sendMessage("PRE_SELECTION");
         });
 
         this.$handle.on('mousedown', function(e) {
@@ -32,6 +32,12 @@ ClipNote.SideBar = {
         });
 
         $('.handle').on('mouseup', function(e) { me.handleMouseUp(e); } );
+
+        $(window).scroll(function () {
+            var y=$(this).scrollTop();
+            if(y<me.elpos){me.$element.stop().animate({'top':0},200);}
+            else{me.$element.stop().animate({'top':y-me.elpos},200);}
+        });
     },
 
     handleMouseMove: function(e) {
@@ -59,6 +65,7 @@ ClipNote.SideBar = {
     },
 
     create: function(url) {
+
         this.$element = $('<iframe></iframe>');
         this.$element.attr('id', 'chinti_edit');
         this.$element.addClass('sidebar');
@@ -71,6 +78,9 @@ ClipNote.SideBar = {
 
         this.$handle = this.createHandle();
         this.$container.append(this.$handle);
+
+        console.log("elpos", this.$element.offset().top);
+        this.elpos = this.$element.offset().top;
     },
 
     createDelimiter: function() {
