@@ -6,6 +6,7 @@ ClipNote.Messages = {
         this.listen();
     },
 
+    //TODO: fix this mother fucker...
     listen: function() {
         console.log(window);
         window.addEventListener('message', function(e) {
@@ -18,6 +19,9 @@ ClipNote.Messages = {
             }
             else if (e.data.command == 'quit') {
                 Events.trigger("QUIT");
+            }
+            else if (e.data.command == 'saveandshare') {
+                Events.trigger("SAVE_AND_SHARE");
             }
         });
     },

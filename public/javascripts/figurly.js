@@ -37,6 +37,11 @@ Figurly.SideBar = {
         });
     },
 
+    saveAndShare: function(comicId) {
+        parent.postMessage({command: 'saveandshare'}, "*");
+        document.location = document.location='/edit/finalize/' + comicId;
+    },
+
     recieveMessage: function(m) {
         if (m.data.command == 'showMessage') {
             $("#instructions").html('<i class="fa fa-info-circle"></i>' + e.data.message);

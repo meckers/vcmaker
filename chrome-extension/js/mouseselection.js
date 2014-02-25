@@ -32,6 +32,9 @@ ClipNote.MouseSelection = {
         Events.register("CANCEL_SELECTION_CLICK", this, function() {
             me.onCancelSelection();
         });
+        Events.register("SAVE_AND_SHARE", this, function() {
+            me.dismantle();
+        })
 
         $('body').bind('mousedown', function(e) {
             console.log("mouse down");
@@ -127,6 +130,7 @@ ClipNote.MouseSelection = {
                 this.callback(this.element);
             }
             Events.trigger("BOX_SELECTION_COMPLETE", this.box);
+            this.shroud.remove();
         }
         else {
             this.reset();

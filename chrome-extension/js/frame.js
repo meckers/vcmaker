@@ -46,7 +46,6 @@ ClipNote.Frame = {
 	},*/
 
 	onSelectionComplete: function(box) {
-        console.log("onselectioncomplete");
 		this.element = box;
 		this.textEditor.create(box, "bottom");
         this.textEditorTop.create(box, "top");
@@ -58,7 +57,8 @@ ClipNote.Frame = {
 		var me = this;
 		var ClipNote_snapshotButton = jQuery("<div></div>");
 		ClipNote_snapshotButton.html("GRAB ->");
-		ClipNote_snapshotButton.addClass("hanging-button grab");
+		//ClipNote_snapshotButton.addClass("hanging-button grab");
+        ClipNote_snapshotButton.addClass("button selectiondocked positive");
 		ClipNote_snapshotButton.click(function() {
 			me.grabFrame();
 		});
